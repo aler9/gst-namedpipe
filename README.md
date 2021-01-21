@@ -1,7 +1,10 @@
 
 # gst-namedpipesink
 
-GStreamer element that allows to write incoming data to fifo / named pipes.
+GStreamer element that allows to write incoming data to fifo / named pipes; these have a couple of advantages with respect to udp and `udpsink`:
+
+* named pipes are more efficient than UDP
+* frame size is unlimited, while in UDP there's a limit of 65536 bytes
 
 Frames are prefixed with their size, in order to allow readers to correctly split them.
 
@@ -25,11 +28,9 @@ meson --prefix=/usr build \
 
 ## Usage
 
-Launch a reader, like this
+Write a reader, for instance this is a reader written in C
 
-```
-tee > reader.c << EOF
-
+```c
 #include <stdlib.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -65,7 +66,11 @@ int main() {
 
     return 0;
 }
-EOF
+```
+
+Compile and launch the reader
+
+```
 gcc -o reader reader.c
 /reader &
 ```
