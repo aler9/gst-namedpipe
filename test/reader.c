@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdio.h>
 
 int main() {
     int fd;
@@ -15,7 +16,7 @@ int main() {
         break;
     }
 
-    uint8_t buf[1024*1024];
+    uint8_t buf[5 * 1024*1024];
 
     while (1) {
         uint32_t size = 0;

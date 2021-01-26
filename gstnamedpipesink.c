@@ -46,14 +46,16 @@ gst_namedpipesink_sink_render (GstBaseSink * base, GstBuffer * buffer)
   if (sink->fd < 0) {
     int ret = mkfifo (sink->location, 0666);
     if (ret < 0) {
-      g_print ("unable to call mkfifo\n");
-      return GST_FLOW_EOS;
+      GST_ELEMENT_ERROR (sink, LIBRARY, FAILED, (NULL),
+          ("unable to call mkfifo"));
+      return GST_FLOW_ERROR;
     }
 
     sink->fd = open (sink->location, O_WRONLY);
     if (sink->fd < 0) {
-      g_print ("unable to open file\n");
-      return GST_FLOW_EOS;
+      GST_ELEMENT_ERROR (sink, LIBRARY, FAILED, (NULL),
+          ("unable to open file"));
+      return GST_FLOW_ERROR;
     }
   }
 
@@ -61,8 +63,18 @@ gst_namedpipesink_sink_render (GstBaseSink * base, GstBuffer * buffer)
   gst_buffer_map (buffer, &map, GST_MAP_READ);
 
   guint32 size = (guint32) map.size;
-  write (sink->fd, &size, sizeof (size));
-  write (sink->fd, map.data, map.size);
+  ssize_t n = write (sink->fd, &size, sizeof (size));
+  if (n != sizeof (size)) {
+    GST_ELEMENT_ERROR (sink, LIBRARY, FAILED, (NULL), ("unable to write size"));
+    return GST_FLOW_ERROR;
+  }
+
+  n = write (sink->fd, map.data, map.size);
+  if (n != map.size) {
+    GST_ELEMENT_ERROR (sink, LIBRARY, FAILED, (NULL),
+        ("unable to write content"));
+    return GST_FLOW_ERROR;
+  }
 
   gst_buffer_unmap (buffer, &map);
   return GST_FLOW_OK;
