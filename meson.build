@@ -1,4 +1,4 @@
-project('gst-videoscale-ratio', 'c', version : '1.0', license : 'LGPL')
+project('gst-namedpipe', 'c', version : '1.0', license : 'LGPL')
 
 plugins_install_dir = join_paths(get_option('libdir'), 'gstreamer-1.0')
 
@@ -11,14 +11,15 @@ cdata.set_quoted('PACKAGE_VERSION', meson.project_version())
 cdata.set_quoted('PACKAGE', meson.project_name())
 cdata.set_quoted('GST_LICENSE', meson.project_license())
 cdata.set_quoted('GST_PACKAGE_NAME', meson.project_name())
-cdata.set_quoted('GST_PACKAGE_ORIGIN', 'https://github.com/aler9/gst-videoscale-ratio')
+cdata.set_quoted('GST_PACKAGE_ORIGIN', 'https://github.com/aler9/gst-namedpipe')
 configure_file(output : 'config.h', configuration : cdata)
 
 plugin_sources = [
-    'gstnamedpipesink.c'
+    'sink.c',
+    'plugin.c'
     ]
 
-plugin = library('gstnamedpipesink',
+plugin = library('gstnamedpipe',
     plugin_sources,
     c_args: plugin_c_args,
     dependencies : [gst_dep],

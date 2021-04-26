@@ -31,8 +31,8 @@ RUN apt update && apt install -y --no-install-recommends \
 COPY test/reader.c /
 RUN gcc -o reader reader.c
 
-COPY --from=build /usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstnamedpipesink.so \
-    /usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstnamedpipesink.so
+COPY --from=build /usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstnamedpipe.so \
+    /usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstnamedpipe.so
 
 COPY test/start.sh /
 RUN chmod +x /start.sh

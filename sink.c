@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "gstnamedpipesink.h"
+#include "sink.h"
 
 #define gst_namedpipesink_parent_class parent_class
 G_DEFINE_TYPE (GstNamedPipeSink, gst_namedpipesink, GST_TYPE_BASE_SINK);
@@ -100,17 +100,3 @@ gst_namedpipesink_init (GstNamedPipeSink * sink)
 {
   sink->fd = -1;
 }
-
-static gboolean
-plugin_init (GstPlugin * plugin)
-{
-  return gst_element_register (plugin, "namedpipesink",
-      GST_RANK_NONE, GST_TYPE_NAMEDPIPESINK);
-}
-
-GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
-    GST_VERSION_MINOR,
-    namedpipesink,
-    "Write incoming data to fifo or named pipes",
-    plugin_init,
-    PACKAGE_VERSION, GST_LICENSE, GST_PACKAGE_NAME, GST_PACKAGE_ORIGIN)

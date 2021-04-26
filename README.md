@@ -1,7 +1,7 @@
 
-# gst-namedpipesink
+# gst-namedpipe
 
-GStreamer element that allows to write incoming data to fifo / named pipes; these have a couple of advantages with respect to udp and `udpsink`:
+GStreamer elements that allow to read/write incoming data to/from named pipes; these have a couple of advantages with respect to UDP, `udpsink`, or `udpsrc`:
 
 * named pipes are more efficient than UDP
 * frame size is unlimited, while in UDP there's a limit of 65536 bytes

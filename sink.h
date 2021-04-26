@@ -9,11 +9,11 @@
 
 G_BEGIN_DECLS
 /* */
-#define GST_TYPE_NAMEDPIPESINK \
-    (gst_namedpipesink_get_type ())
-#define GST_NAMEDPIPESINK(obj) \
-    (G_TYPE_CHECK_INSTANCE_CAST ((obj),GST_TYPE_NAMEDPIPESINK,GstNamedPipeSink))
-    typedef struct
+GType gst_namedpipesink_get_type ();
+#define GST_TYPE_NAMEDPIPESINK (gst_namedpipesink_get_type ())
+#define GST_NAMEDPIPESINK(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj),GST_TYPE_NAMEDPIPESINK,GstNamedPipeSink))
+/* */
+typedef struct
 {
   GstBaseSink parent;
 
