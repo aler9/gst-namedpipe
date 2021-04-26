@@ -16,6 +16,7 @@ configure_file(output : 'config.h', configuration : cdata)
 
 plugin_sources = [
     'sink.c',
+    'src.c',
     'plugin.c'
     ]
 

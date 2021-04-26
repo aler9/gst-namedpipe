@@ -31,6 +31,9 @@ RUN apt update && apt install -y --no-install-recommends \
 COPY test/reader.c /
 RUN gcc -o reader reader.c
 
+COPY test/writer.c /
+RUN gcc -o writer writer.c
+
 COPY --from=build /usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstnamedpipe.so \
     /usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstnamedpipe.so
 

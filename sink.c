@@ -39,7 +39,7 @@ gst_namedpipesink_set_property (GObject * object, guint prop_id,
 }
 
 static GstFlowReturn
-gst_namedpipesink_sink_render (GstBaseSink * base, GstBuffer * buffer)
+gst_namedpipesink_render (GstBaseSink * base, GstBuffer * buffer)
 {
   GstNamedPipeSink *sink = GST_NAMEDPIPESINK (base);
 
@@ -77,7 +77,7 @@ static void
 gst_namedpipesink_class_init (GstNamedPipeSinkClass * klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-  GstElementClass *gstelement_class = (GstElementClass *) klass;
+  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
   GstBaseSinkClass *gstbasesink_class = GST_BASE_SINK_CLASS (klass);
 
   gobject_class->set_property = gst_namedpipesink_set_property;
@@ -89,7 +89,7 @@ gst_namedpipesink_class_init (GstNamedPipeSinkClass * klass)
 
   gst_element_class_add_static_pad_template (gstelement_class, &sinkfactory);
 
-  gstbasesink_class->render = GST_DEBUG_FUNCPTR (gst_namedpipesink_sink_render);
+  gstbasesink_class->render = GST_DEBUG_FUNCPTR (gst_namedpipesink_render);
 
   gst_element_class_set_static_metadata (gstelement_class,
       "Sink name", "Sink", "My Sink element", "The author <my.sink@my.email>");
