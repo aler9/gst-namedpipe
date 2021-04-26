@@ -43,7 +43,7 @@ gst_namedpipesink_start (GstBaseSink * base)
 {
   GstNamedPipeSink *sink = GST_NAMEDPIPESINK (base);
 
-  sink->fd = open (sink->location, O_WRONLY);
+  sink->fd = open (sink->location, O_RDWR);
   if (sink->fd < 0) {
     GST_ELEMENT_ERROR (sink, LIBRARY, FAILED, (NULL),
         ("unable to open named pipe"));

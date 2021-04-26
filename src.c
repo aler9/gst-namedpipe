@@ -67,7 +67,7 @@ static gboolean
 gst_namedpipesrc_start (GstBaseSrc * base)
 {
   GstNamedPipeSrc *src = GST_NAMEDPIPESRC (base);
-  src->fd = open (src->location, O_RDONLY);
+  src->fd = open (src->location, O_RDWR);
   if (src->fd < 0) {
     GST_ELEMENT_ERROR (src, LIBRARY, FAILED, (NULL),
         ("unable to open named pipe"));

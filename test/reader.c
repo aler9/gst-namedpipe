@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 int main() {
-    int fd = open("/tmp/testing", O_RDONLY);
+    int fd = open("/tmp/testing", O_RDWR);
     if (fd < 0) {
         printf("unable to open named pipe\n");
         return 1;
