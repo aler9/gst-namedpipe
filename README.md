@@ -77,7 +77,7 @@ meson --prefix=/usr build \
    /reader &
    ```
 
- 3. Launch a pipeline
+3. Launch a pipeline
 
    ```
    gst-launch-1.0 \
