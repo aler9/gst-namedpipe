@@ -9,7 +9,7 @@
 
 G_BEGIN_DECLS
 /* */
-GType gst_namedpipesrc_get_type ();
+    GType gst_namedpipesrc_get_type ();
 #define GST_TYPE_NAMEDPIPESRC (gst_namedpipesrc_get_type ())
 #define GST_NAMEDPIPESRC(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj),GST_TYPE_NAMEDPIPESRC,GstNamedPipeSrc))
 /* */
@@ -19,7 +19,7 @@ typedef struct
 
   /* properties */
   gchar *location;
-  GstCaps   *caps;
+  GstCaps *caps;
 
   int fd;
 

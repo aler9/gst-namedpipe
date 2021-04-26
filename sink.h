@@ -9,7 +9,7 @@
 
 G_BEGIN_DECLS
 /* */
-GType gst_namedpipesink_get_type ();
+    GType gst_namedpipesink_get_type ();
 #define GST_TYPE_NAMEDPIPESINK (gst_namedpipesink_get_type ())
 #define GST_NAMEDPIPESINK(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj),GST_TYPE_NAMEDPIPESINK,GstNamedPipeSink))
 /* */

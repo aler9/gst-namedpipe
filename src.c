@@ -63,6 +63,28 @@ gst_namedpipesrc_set_property (GObject * object, guint prop_id,
   }
 }
 
+static gboolean
+gst_namedpipesrc_start (GstBaseSrc * base)
+{
+  GstNamedPipeSrc *src = GST_NAMEDPIPESRC (base);
+  src->fd = open (src->location, O_RDONLY);
+  if (src->fd < 0) {
+    GST_ELEMENT_ERROR (src, LIBRARY, FAILED, (NULL),
+        ("unable to open named pipe"));
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+static gboolean
+gst_namedpipesrc_stop (GstBaseSrc * base)
+{
+  GstNamedPipeSrc *src = GST_NAMEDPIPESRC (base);
+  close (src->fd);
+  return TRUE;
+}
+
 static GstCaps *
 gst_namedpipesrc_getcaps (GstBaseSrc * base, GstCaps * filter)
 {
@@ -89,28 +111,18 @@ gst_namedpipesrc_getcaps (GstBaseSrc * base, GstCaps * filter)
 }
 
 static GstFlowReturn
-gst_namedpipesrc_create (GstPushSrc *base, GstBuffer **buf)
+gst_namedpipesrc_create (GstPushSrc * base, GstBuffer ** buf)
 {
   GstNamedPipeSrc *src = GST_NAMEDPIPESRC (base);
 
-  if (src->fd < 0) {
-    src->fd = open (src->location, O_RDONLY);
-    if (src->fd < 0) {
-      GST_ELEMENT_ERROR (src, LIBRARY, FAILED, (NULL),
-          ("unable to open named pipe"));
-      return GST_FLOW_ERROR;
-    }
-  }
-
   guint32 size = 0;
-  size_t n = read(src->fd, &size, sizeof(guint32));
-  if (n != sizeof(guint32)) {
-      GST_ELEMENT_ERROR (src, LIBRARY, FAILED, (NULL),
-          ("unable to read size"));
-      return GST_FLOW_ERROR;
+  size_t n = read (src->fd, &size, sizeof (guint32));
+  if (n != sizeof (guint32)) {
+    GST_ELEMENT_ERROR (src, LIBRARY, FAILED, (NULL), ("unable to read size"));
+    return GST_FLOW_ERROR;
   }
 
-  *buf = gst_buffer_new_allocate(NULL, size, NULL);
+  *buf = gst_buffer_new_allocate (NULL, size, NULL);
 
   GstMapInfo map;
   gst_buffer_map (*buf, &map, GST_MAP_WRITE);
@@ -148,6 +160,8 @@ gst_namedpipesrc_class_init (GstNamedPipeSrcClass * klass)
 
   gst_element_class_add_static_pad_template (gstelement_class, &srcfactory);
 
+  gstbasesrc_class->start = gst_namedpipesrc_start;
+  gstbasesrc_class->stop = gst_namedpipesrc_stop;
   gstbasesrc_class->get_caps = gst_namedpipesrc_getcaps;
   gstpushsrc_class->create = GST_DEBUG_FUNCPTR (gst_namedpipesrc_create);
 
@@ -158,5 +172,4 @@ gst_namedpipesrc_class_init (GstNamedPipeSrcClass * klass)
 static void
 gst_namedpipesrc_init (GstNamedPipeSrc * src)
 {
-  src->fd = -1;
 }

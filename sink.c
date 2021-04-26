@@ -38,19 +38,33 @@ gst_namedpipesink_set_property (GObject * object, guint prop_id,
   }
 }
 
+static gboolean
+gst_namedpipesink_start (GstBaseSink * base)
+{
+  GstNamedPipeSink *sink = GST_NAMEDPIPESINK (base);
+
+  sink->fd = open (sink->location, O_WRONLY);
+  if (sink->fd < 0) {
+    GST_ELEMENT_ERROR (sink, LIBRARY, FAILED, (NULL),
+        ("unable to open named pipe"));
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+static gboolean
+gst_namedpipesink_stop (GstBaseSink * base)
+{
+  GstNamedPipeSink *sink = GST_NAMEDPIPESINK (base);
+  close (sink->fd);
+  return TRUE;
+}
+
 static GstFlowReturn
 gst_namedpipesink_render (GstBaseSink * base, GstBuffer * buffer)
 {
   GstNamedPipeSink *sink = GST_NAMEDPIPESINK (base);
-
-  if (sink->fd < 0) {
-    sink->fd = open (sink->location, O_WRONLY);
-    if (sink->fd < 0) {
-      GST_ELEMENT_ERROR (sink, LIBRARY, FAILED, (NULL),
-          ("unable to open named pipe"));
-      return GST_FLOW_ERROR;
-    }
-  }
 
   GstMapInfo map;
   gst_buffer_map (buffer, &map, GST_MAP_READ);
@@ -89,6 +103,8 @@ gst_namedpipesink_class_init (GstNamedPipeSinkClass * klass)
 
   gst_element_class_add_static_pad_template (gstelement_class, &sinkfactory);
 
+  gstbasesink_class->start = GST_DEBUG_FUNCPTR (gst_namedpipesink_start);
+  gstbasesink_class->stop = GST_DEBUG_FUNCPTR (gst_namedpipesink_stop);
   gstbasesink_class->render = GST_DEBUG_FUNCPTR (gst_namedpipesink_render);
 
   gst_element_class_set_static_metadata (gstelement_class,
@@ -98,5 +114,4 @@ gst_namedpipesink_class_init (GstNamedPipeSinkClass * klass)
 static void
 gst_namedpipesink_init (GstNamedPipeSink * sink)
 {
-  sink->fd = -1;
 }
