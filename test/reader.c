@@ -12,7 +12,7 @@ int main() {
         return 1;
     }
 
-    uint8_t buf[5 * 1024*1024];
+    uint8_t buf[5*1024*1024];
 
     while (1) {
         uint32_t size = 0;

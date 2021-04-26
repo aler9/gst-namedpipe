@@ -3,7 +3,7 @@
 #define __GST_NAMEDPIPESINK_H__
 
 #include <gst/gst.h>
-#include <gst/video/video.h>
+#include <gst/base/gstbasesink.h>
 
 #include "config.h"
 

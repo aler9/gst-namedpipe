@@ -2,7 +2,7 @@ project('gst-namedpipe', 'c', version : '1.0', license : 'LGPL')
 
 plugins_install_dir = join_paths(get_option('libdir'), 'gstreamer-1.0')
 
-gst_dep = dependency('gstreamer-video-1.0')
+gst_dep = dependency('gstreamer-base-1.0')
 
 plugin_c_args = ['-DHAVE_CONFIG_H']
 
