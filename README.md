@@ -28,60 +28,62 @@ meson --prefix=/usr build \
 
 ## Usage
 
-Write a reader, for instance this is a reader written in C
+1. Create a named pipe
 
-```c
-#include <stdlib.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
+   ```
+   mkfifo /tmp/testing
+   ```
 
-int main() {
-    int fd;
-    while (1) {
-        fd = open("/tmp/testing", O_RDONLY);
-        if (fd < 0) {
-            sleep(1);
-            continue;
-        }
-        break;
-    }
+2. Write a reader, for instance this is a reader written in C
 
-    uint8_t buf[1024*1024];
+   ```c
+   #include <stdlib.h>
+   #include <stdint.h>
+   #include <fcntl.h>
+   #include <unistd.h>
 
-    while (1) {
-        uint32_t size = 0;
-        size_t n = read(fd, &size, sizeof(uint32_t));
-        if (n != sizeof(uint32_t)) {
-            break;
-        }
+   int main() {
+       int fd = open("/tmp/testing", O_RDONLY);
+       if (fd < 0) {
+           printf("unable to open named pipe\n");
+           return 1;
+       }
 
-        n = read(fd, buf, size);
-        if (n != size) {
-            break;
-        }
+       uint8_t buf[1024*1024];
 
-        printf("received %d\n", size);
-    }
+       while (1) {
+           uint32_t size = 0;
+           size_t n = read(fd, &size, sizeof(uint32_t));
+           if (n != sizeof(uint32_t)) {
+               break;
+           }
 
-    return 0;
-}
-```
+           n = read(fd, buf, size);
+           if (n != size) {
+               break;
+           }
 
-Compile and launch the reader
+           printf("received %d\n", size);
+       }
 
-```
-gcc -o reader reader.c
-/reader &
-```
+       return 0;
+   }
+   ```
 
-Launch a pipeline
+   Compile and launch the reader
 
-```
-gst-launch-1.0 \
-videotestsrc \
-! video/x-raw,width=640,height=320,framerate=20/1 \
-! namedpipesink location=/tmp/testing sync=1
-```
+   ```
+   gcc -o reader reader.c
+   /reader &
+   ```
 
-Data is now available to the reader.
+ 3. Launch a pipeline
+
+   ```
+   gst-launch-1.0 \
+   videotestsrc \
+   ! video/x-raw,width=640,height=320,framerate=20/1 \
+   ! namedpipesink location=/tmp/testing sync=1
+   ```
+
+   Data is now available to the reader.

@@ -6,14 +6,10 @@
 #include <stdio.h>
 
 int main() {
-    int fd;
-    while (1) {
-        fd = open("/tmp/testing", O_RDONLY);
-        if (fd < 0) {
-            sleep(1);
-            continue;
-        }
-        break;
+    int fd = open("/tmp/testing", O_RDONLY);
+    if (fd < 0) {
+        printf("unable to open named pipe\n");
+        return 1;
     }
 
     uint8_t buf[5 * 1024*1024];
@@ -33,5 +29,6 @@ int main() {
         printf("received %d\n", size);
     }
 
+    printf("exited\n");
     return 0;
 }

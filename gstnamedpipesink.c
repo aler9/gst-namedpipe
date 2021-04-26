@@ -44,17 +44,10 @@ gst_namedpipesink_sink_render (GstBaseSink * base, GstBuffer * buffer)
   GstNamedPipeSink *sink = GST_NAMEDPIPESINK (base);
 
   if (sink->fd < 0) {
-    int ret = mkfifo (sink->location, 0666);
-    if (ret < 0) {
-      GST_ELEMENT_ERROR (sink, LIBRARY, FAILED, (NULL),
-          ("unable to call mkfifo"));
-      return GST_FLOW_ERROR;
-    }
-
     sink->fd = open (sink->location, O_WRONLY);
     if (sink->fd < 0) {
       GST_ELEMENT_ERROR (sink, LIBRARY, FAILED, (NULL),
-          ("unable to open file"));
+          ("unable to open named pipe"));
       return GST_FLOW_ERROR;
     }
   }
@@ -91,7 +84,7 @@ gst_namedpipesink_class_init (GstNamedPipeSinkClass * klass)
 
   g_object_class_install_property (gobject_class, PROP_LOCATION,
       g_param_spec_string ("location", "File Location",
-          "Location of the file to write",
+          "Location of the named pipe to write",
           NULL, G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
 
   gst_element_class_add_static_pad_template (gstelement_class, &sinkfactory);
