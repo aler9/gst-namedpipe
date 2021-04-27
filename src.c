@@ -172,4 +172,7 @@ gst_namedpipesrc_class_init (GstNamedPipeSrcClass * klass)
 static void
 gst_namedpipesrc_init (GstNamedPipeSrc * src)
 {
+  gst_base_src_set_live (GST_BASE_SRC (src), TRUE);
+  gst_base_src_set_format (GST_BASE_SRC (src), GST_FORMAT_TIME);
+  gst_base_src_set_do_timestamp (GST_BASE_SRC (src), TRUE);
 }
