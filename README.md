@@ -16,6 +16,7 @@ Frames are prefixed with their size, in order to allow readers to correctly spli
 ## Installation
 
 Install build dependencies:
+
 ```
 sudo apt install -y --no-install-recommends \
 gcc \
@@ -24,6 +25,7 @@ libgstreamer-plugins-base1.0-dev
 ```
 
 Compile and install:
+
 ```
 meson --prefix=/usr build \
 && cd build \
