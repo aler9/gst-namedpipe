@@ -14,7 +14,7 @@ help:
 
 indent:
 	# https://gstreamer.freedesktop.org/documentation/frequently-asked-questions/developing.html?gi-language=c#what-is-the-coding-style-for-gstreamer-code
-	docker run --rm -it -v $(PWD):/s $(UBUNTU_BASE_IMAGE) sh -c \
+	docker run --rm -it -v $(shell pwd):/s $(UBUNTU_BASE_IMAGE) sh -c \
 	"apt update && apt install -y indent \
 	&& echo ok \
 	&& cd /s && indent \
